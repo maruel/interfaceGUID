@@ -6,9 +6,10 @@ package interface_guid
 
 import (
 	"fmt"
-	"github.com/maruel/ut"
 	"reflect"
 	"testing"
+
+	"github.com/maruel/ut"
 )
 
 func ExampleCalculateGUID() {
