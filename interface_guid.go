@@ -2,9 +2,9 @@
 // Use of this source code is governed under the Apache License, Version 2.0
 // that can be found in the LICENSE file.
 
-// Package interface_guid exposes one function to calculate a unique identifier
+// Package interfaceGUID exposes one function to calculate a unique identifier
 // for an interface.
-package interface_guid
+package interfaceGUID
 
 import (
 	"crypto/sha256"
