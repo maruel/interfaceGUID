@@ -16,8 +16,8 @@ import (
 type set map[string]bool
 
 func write(h io.Writer, item string) {
-	h.Write([]byte(item))
-	h.Write([]byte{0})
+	_, _ = h.Write([]byte(item))
+	_, _ = h.Write([]byte{0})
 }
 
 func recurseType(h io.Writer, t reflect.Type, seen set) {
