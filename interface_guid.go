@@ -9,6 +9,7 @@ package interfaceGUID
 import (
 	"crypto/sha256"
 	"encoding/hex"
+	"fmt"
 	"io"
 	"reflect"
 )
@@ -55,8 +56,10 @@ func recurseType(h io.Writer, t reflect.Type, seen set) {
 		recurseType(h, t.Elem(), seen)
 	} else if kind >= reflect.Bool && kind <= reflect.Complex128 || kind == reflect.String {
 		// Base types.
+	} else if kind == reflect.Func {
+		// Handle inputs and outputs types.
 	} else {
-		panic(kind.String())
+		panic(fmt.Errorf("do not know how to handle %s", kind))
 	}
 }
 
