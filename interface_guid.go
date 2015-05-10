@@ -50,7 +50,13 @@ func recurseType(h io.Writer, t reflect.Type, seen set) {
 			recurseMethod(h, t.Method(i), seen)
 		}
 	} else if kind == reflect.Array || kind == reflect.Chan || kind == reflect.Ptr || kind == reflect.Slice {
-		recurseType(h, t.Elem(), seen)
+		if t.Elem() == t {
+			// It's type T *T style. Do not do infinite recursion.
+			write(h, "*")
+			write(h, t.Name())
+		} else {
+			recurseType(h, t.Elem(), seen)
+		}
 	} else if kind == reflect.Map {
 		recurseType(h, t.Key(), seen)
 		recurseType(h, t.Elem(), seen)
@@ -59,7 +65,7 @@ func recurseType(h io.Writer, t reflect.Type, seen set) {
 	} else if kind == reflect.Func {
 		// Handle inputs and outputs types.
 	} else {
-		panic(fmt.Errorf("do not know how to handle %s", kind))
+		panic(fmt.Errorf("do not know how to handle %s, please file a bug at github.com/maruel/interfaceGUID", kind))
 	}
 }
 
@@ -73,8 +79,8 @@ func recurseMethod(h io.Writer, m reflect.Method, seen set) {
 	}
 }
 
-// CalculateGUID returns the hex encoded string of the SHA-256 hash of a
-// reflected type, normally an interface.
+// Calculate returns the hex encoded string of the SHA-256 hash of a reflected
+// type, normally an interface.
 //
 // The reflected type is traversed recursively up to all native types
 // referenced. The value is dependent on the referenced type names, methods and
@@ -85,8 +91,14 @@ func recurseMethod(h io.Writer, m reflect.Method, seen set) {
 // another communication mechanism.
 //
 // See test cases for more details.
-func CalculateGUID(t reflect.Type) string {
+func Calculate(t reflect.Type) string {
 	h := sha256.New()
 	recurseType(h, t, make(set))
 	return hex.EncodeToString(h.Sum(nil))
 }
+
+// CalculateGUID is deprecated.
+//
+// TODO(maruel): Will be removed at around 2015-11-01. Please update to
+// Calculate.
+var CalculateGUID = Calculate
