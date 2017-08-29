@@ -96,9 +96,3 @@ func Calculate(t reflect.Type) string {
 	recurseType(h, t, make(set))
 	return hex.EncodeToString(h.Sum(nil))
 }
-
-// CalculateGUID is deprecated.
-//
-// TODO(maruel): Will be removed at around 2015-11-01. Please update to
-// Calculate.
-var CalculateGUID = Calculate
